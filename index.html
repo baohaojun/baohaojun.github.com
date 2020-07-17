@@ -7,7 +7,7 @@
 <head>
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Android App development under FreeBSD</title>
+<title> 洗冷水澡记</title>
 <meta content="Org mode" name="generator"/>
 <meta content="Bao Haojun" name="author"/>
 
@@ -103,217 +103,114 @@ for the JavaScript code in this tag.
 <div id="bhj_article">
 <div id="bhj_leftpane">
 <div id="content" style="font-size: 11pt; line-height: 1.6em">
-<h1 class="title" style="margin: 1.3em 0 1em; padding: 0; border-bottom: 1px solid #ddd; text-align: center; font-size: 160%; color: #191970; font-weight: bold">Android App development under FreeBSD</h1>
+<h1 class="title" style="margin: 1.3em 0 1em; padding: 0; border-bottom: 1px solid #ddd; text-align: center; font-size: 160%; color: #191970; font-weight: bold"> 洗冷水澡记</h1>
 <p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-I started using FreeBSD around May 2020. Don't know why, maybe just got a bit tired with Linux, and needed something new (I've been using Linux for ~15 years, at 10th year, I made a video about <a href="https://www.youtube.com/watch?v=qp2b3-Guej0" style="color: #06C; text-decoration: underline">my Linux daily usage</a>).
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-So far I'm quite happy about FreeBSD experience. At one point, it was painful and I asked myself why are you doing this, man? I was about to give up, but then I take a deep breath and tried again, since deep down my heart I kind of know why I'm painful: it's because I mixed the FreeBSD Quarterly version and the Latest version. The second time, I sticked with Quarterly.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-All in all, FreeBSD is very stable! I loved it when I found the laptop (ThinkPad T440p) can sleep and wakeup reliably &#x2013; on the other hand, X Window on Linux often fail to wake up, forcing me to restart the desktop session and losing all the open windows.
-</p>
-<div class="outline-2" id="outline-container-orgee66df1">
-<h2 id="orgee66df1" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'><span class="section-number-2">1</span> Android App development under FreeBSD</h2>
-<div class="outline-text-2" id="text-1">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-Android App development under FreeBSD is very painful, but not impossible. After a lot of Googling, I have come through a relatively smooth method.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-TL;DR:
-</p>
-<ol class="org-ol" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0">Install Linux Binary Compatibility</li>
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Install Linux version of Android Studio, make it run with LBC
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Need decompile and recompile a certain Android jar file.
-</p></li>
-<li style="margin: 0.5em 0">Downgrade adb on FreeBSD</li>
-<li style="margin: 0.5em 0">Updated lsp-intellij and lsp-intellij-server, so that I can use Emacs for Android App development</li>
-<li style="margin: 0.5em 0">A workaround for using both Emacs (lsp-intellij) and AndroidStudio for App development</li>
-</ol>
-</div>
-<div class="outline-3" id="outline-container-org8ebfded">
-<h3 id="org8ebfded" style="margin: 1.3em 0 1em; padding: 0; font-size: 1.3em; color: #0084C8; font-weight: bold"><span class="section-number-3">1.1</span> Install Linux Binary Compatibility</h3>
-<div class="outline-text-3" id="text-1-1">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-You'd better have read the LBC document, and have a basic understanding about how it works (see below).
-</p>
-</div>
-</div>
-<div class="outline-3" id="outline-container-orga44fed2">
-<h3 id="orga44fed2" style="margin: 1.3em 0 1em; padding: 0; font-size: 1.3em; color: #0084C8; font-weight: bold"><span class="section-number-3">1.2</span> Hacking android jars and android studio</h3>
-<div class="outline-text-3" id="text-1-2">
-<ol class="org-ol" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0">Find a simple Android App source code (for e.g., copy from a Linux system).</li>
-<li style="margin: 0.5em 0">Get the android sdk downloaded through gradle (by running <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">./gradlew aR</code>), then it fails, complaining about unknown platform: FreeBSD</li>
-<li style="margin: 0.5em 0">patch the sdk common.jar (<code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">find ~/.gradle/ -name 'common*.jar'|grep android</code>) according to <a href="http://zewaren.net/android-1.html" style="color: #06C; text-decoration: underline">http://zewaren.net/android-1.html</a>, but with jd-gui:
-
-<ul class="org-ul" style="margin: 0; padding-left: 1em">
-<li style="margin: 0.5em 0">open the jar file with jd-gui</li>
-<li style="margin: 0.5em 0">save the SdkConstants.java (package: <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">com.android</code>) to ~/</li>
-<li style="margin: 0.5em 0">javac ~/SdkConstants.java -cp $(find ~/.gradle/ -name 'common*.jar'|grep android)</li>
-<li style="margin: 0.5em 0">mkdir com/android -p;</li>
-<li style="margin: 0.5em 0">mv ~/SdkConstants.class ./com/android/;</li>
-<li style="margin: 0.5em 0">jar uf $(find ~/.gradle/ -name 'common*.jar'|grep android) com/android/SdkConstants.class</li>
-</ul></li>
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Work around an mkdir error in aapt2:
-</p>
-<ul class="org-ul" style="margin: 0; padding-left: 1em">
-<li style="margin: 0.5em 0"><code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">sudo ln -s /home/ /compat/linux/home</code></li>
-</ul>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-This is found out through running aapt2 with truss: aapt2 will <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">mkdir("/home")</code> and fail, so, I just desparately made a symlink for it.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-<code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">/compat/linux</code> has a filesystem union for linux binaries, but, sometimes the union seems to be broken, for e.g., if you run this command:
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-<code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">PATH=/compat/linux/bin:/compat/linux/usr/bin/:$PATH bash -c 'ls /dev'</code>
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-You will see nothing except <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">/dev/shm</code>. But if you run:
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-<code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">PATH=/compat/linux/bin:/compat/linux/usr/bin/:$PATH bash -c 'ls /dev/null'</code>
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Then, you can see that <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">/dev/null</code> is output. This is confusing for some programs: If you <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">ls /dev</code>, <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">/dev/null</code> is not there; but if you <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">ls /dev/null</code>, it is there! The reason aapt2 try to mkdir("/home") is kind of like that too, I think.
-</p></li>
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-run <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">linux-env ./gradlew aR</code> again, and this time, it works.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-<code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">linux-env</code> is a simple script I wrote:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh" style="background: transparent; color: inherit; border: 2pt solid #7E0D0C; padding: 5pt; overflow: auto; font-family: Consolas, Inconsolata, Courier, monospace; font-size: 1em; line-height: 1.2em; margin: 1.2em 0"><span class="org-comment-delimiter" style="color: #204A87">#</span><span class="org-comment" style="color: #204A87">!/usr/bin/</span><span class="org-keyword" style="color: #A52A2A; font-weight: bold">env</span><span class="org-comment" style="color: #204A87"> bash</span><br/><span class="org-builtin" style="color: #A020F0">set</span> -e<br/><br/><span class="org-variable-name" style="color: #0084C8; font-weight: bold">PATH</span>=/compat/linux/bin:$<span class="org-variable-name" style="color: #0084C8; font-weight: bold">PATH</span><br/><span class="org-string" style="color: #4E9A06">"$@"</span><br/></pre>
-</div></li>
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Now, I can also run AndroidStudio, can generate an Android App Project.
-</p>
-<ul class="org-ul" style="margin: 0; padding-left: 1em">
-<li style="margin: 0.5em 0">export JAVA_HOME=/usr/local/openjdk8/</li>
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Gradle sync will fail, complaining:
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-&gt; Process 'command '/home/bhj/android-studio/jre/bin/java'' finished with non-zero exit value 1
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-To fix this, inside AndroidStudio, set the jre that gradle uses to the same as /usr/local/openjdk8.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-(Project Structure -&gt; SDK Location -&gt; JDK Location).
-</p></li>
-</ul>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Then, gradle will fail again, complaining <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">Unknown platform 'FreeBSD'</code>. But we already know how to fix this: start AndroidStudio with <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">linux-env ~/android-studio/bin/studio.sh</code>.
-</p></li>
-</ol>
-</div>
-</div>
-<div class="outline-3" id="outline-container-orgde14c5d">
-<h3 id="orgde14c5d" style="margin: 1.3em 0 1em; padding: 0; font-size: 1.3em; color: #0084C8; font-weight: bold"><span class="section-number-3">1.3</span> Fix adb devices go missing</h3>
-<div class="outline-text-3" id="text-1-3">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-Here the problem is that my phone's adb connection will suddenly be gone when doing adb push or adb install (which involes pushing the apk file first).
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-But <a href="https://github.com/baohaojun/Wrench/" style="color: #06C; text-decoration: underline">another tool</a> that I'm using, won't make adb device disappear when installing apk. The tool's C++ adb client code is copied from adb version 1.0.39, and the current freebsd <code style="background: transparent; font-size: 0.85em; font-family: Consolas, Inconsolata, Courier, monospace; margin: 0 0.15em; padding: 0 0.3em; white-space: pre-wrap; border: 1px solid #EAEAEA; background-color: #F8F8F8; border-radius: 3px; display: inline; color: #7f7f7f">adb</code> version is 1.0.41, so I doubted that maybe it's because of the higher adb version is not compatible with my phone.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-In other words:
-</p>
-<ul class="org-ul" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0">If I use the adb binary directly, that is, 1.0.41 adb client with 1.0.41 adb server (adb fork-server), adb push will disconnect my adb.</li>
-<li style="margin: 0.5em 0">If I use my tool's 1.0.39 adb client with 1.0.41 adb server, adb push won't disconnect my adb.</li>
-</ul>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-Seems the bug must be in the adb 1.0.41 client/server protocol, so I decided to downgrade my adb binary.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-After some googling, I found that I can install older version of adb with portdowngrade, so I googled for freebsd's adb port revision for adb-1.0.39, and downgraded it. One problem when compiling: I must replace android_pubkey.c with current version to fix a build error:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh" style="background: transparent; color: inherit; border: 2pt solid #7E0D0C; padding: 5pt; overflow: auto; font-family: Consolas, Inconsolata, Courier, monospace; font-size: 1em; line-height: 1.2em; margin: 1.2em 0">sudo cp <span class="org-sh-escaped-newline" style="color: #4E9A06">\</span><br/>     /usr/ports/devel/android-tools-adb/work/platform_system_core-platform-tools-29.0.4/libcrypto_utils/android_pubkey.c <span class="org-sh-escaped-newline" style="color: #4E9A06">\</span><br/>     /usr/ports/adb-1.0.39/android-tools-adb/work/platform_system_core-android-8.1.0_r2/adb/../libcrypto_utils/android_pubkey.c<br/><br/></pre>
-</div>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-After that, my adb device connection is quite stable now.
-</p>
-</div>
-</div>
-<div class="outline-3" id="outline-container-org9005a9c">
-<h3 id="org9005a9c" style="margin: 1.3em 0 1em; padding: 0; font-size: 1.3em; color: #0084C8; font-weight: bold"><span class="section-number-3">1.4</span> Update lsp-intellij and lsp-intellij-server</h3>
-<div class="outline-text-3" id="text-1-4">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-I use Emacs for almost everything.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-There is a project <a href="https://github.com/Ruin0x11/lsp-intellij" style="color: #06C; text-decoration: underline">lsp-intellij</a> that allow me to use Emacs together with AndroidStudio (which is based on <a href="https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html" style="color: #06C; text-decoration: underline">Intellij</a>), but it has long been unmaintained: it supported lsp-mode version
-4.1, and can't be used in current version anymore.
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-I verified using old version of everything (thanks to github!), and saw that lsp-intellij does work in that version. That gave me confidence to make it work under current version of lsp-mode (6.2.1).
-</p>
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-It's very dirty for now, but it does work (auto-completion, syntax error hint, etc). Maybe I will clean it up later.
+疫情期间，因为无法去健身房游泳，我发现了一种新的代替的锻炼方法：洗冷水澡。
 </p>
 <div class="figure" style="padding: 0.5em">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0; text-align: center"><a href="images/lsp-intellij.png" style="color: #06C; text-decoration: underline"><img alt="lsp-intellij.png" src="images/lsp-intellij.png" style="max-width: 100%; border-width: 0"/></a>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0; text-align: center"><img alt="Programate-dog.gif" src="images/Programate-dog.gif" style="max-width: 100%"/>
 </p>
 </div>
 <p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-For details check out the source code:
-</p>
-<ul class="org-ul" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0"><a href="https://github.com/baohaojun/intellij-lsp-server/" style="color: #06C; text-decoration: underline">https://github.com/baohaojun/intellij-lsp-server/</a></li>
-<li style="margin: 0.5em 0"><a href="https://github.com/baohaojun/lsp-intellij/" style="color: #06C; text-decoration: underline">https://github.com/baohaojun/lsp-intellij/</a></li>
-<li style="margin: 0.5em 0"><a href="https://github.com/baohaojun/elpa/tree/master/lsp-mode-20200414.1646" style="color: #06C; text-decoration: underline">https://github.com/baohaojun/elpa/tree/master/lsp-mode-20200414.1646</a></li>
-</ul>
-</div>
-</div>
-<div class="outline-3" id="outline-container-org3282eaf">
-<h3 id="org3282eaf" style="margin: 1.3em 0 1em; padding: 0; font-size: 1.3em; color: #0084C8; font-weight: bold"><span class="section-number-3">1.5</span> Work around for using both AndroidStudio and Emacs</h3>
-<div class="outline-text-3" id="text-1-5">
-<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-Once I start lsp, the AndroidStudio window for the App project will be hidden &#x2013; I can't open it again, unless I kill AndroidStudio and restart it, but then, I can't use lsp in Emacs unless I restart lsp, which will close the AndroidStudio window.
+最开始，是在 YCombinator 上，发现一篇介绍洗冷水澡对健康和工作的影响的文章：
 </p>
 <p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-Lsp-intellij just formid you to edit a single file in parallel.
+<a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749" style="color: #06C; text-decoration: underline">https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161749</a>
 </p>
 <p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
-For now, I can only think of a workaround for this:
+荷兰科学家研究发现，通过洗冷水澡，能对健康和工作产生比较积极正面的影响（具体数据和研究标准比较晦涩，好像是根据实验对象在实验期间生病天数和请病假天数、对生活质量、工作效率、焦虑、冷热舒适性和不良反应等的问卷调查得出的结论）。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+总之，看完以后，我觉得这个实验中提到的洗冷水澡的方法特别适合我辈中年人：
 </p>
 <ol class="org-ol" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0"><p style="margin-top: 10px; margin-bottom: 10px; margin: 0.5em 0">
-Copy the project files with a hardlink:
-</p>
-<div class="org-src-container">
-<pre class="src src-sh" style="background: transparent; color: inherit; border: 2pt solid #7E0D0C; padding: 5pt; overflow: auto; font-family: Consolas, Inconsolata, Courier, monospace; font-size: 1em; line-height: 1.2em; margin: 1.2em 0">cp AppProject AppProject.shadow -avl<br/></pre>
-</div></li>
-<li style="margin: 0.5em 0">Open AppProject.shadow in AndroidStudio</li>
-<li style="margin: 0.5em 0">When I need to import a class, for e.g., this is not supported by lsp-intellij, so I switch to the AndroidStudio AppProject.shadow, and do the import there, then I switch back to Emacs.</li>
+<li style="margin: 0.5em 0">先用热水洗到自己觉得舒服了</li>
+<li style="margin: 0.5em 0">打开冷水，洗 30~90 秒冷水澡</li>
 </ol>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+年轻的时候我也曾洗过冷水澡，但那时候完全没这么讲究，还先洗热水洗到舒服了，都是全程冷水好嘛，一边大呼小叫，鬼哭狼嚎，一边一脸盆一脸盆的冷水往脑袋上倒。我现在感觉自己脑子不怎么好，有点怀疑就是那时候被冻坏掉。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+但是看到这么简单易行的洗冷水澡的方法，简直像是做弊开挂一样，不尝试一下是不可能的，心里会痒痒的，所以我看完那篇文章，马上就跑到卫生间脱得光溜溜的，洗了个冷水澡，我靠，真 TMD 冷啊！差点把我给洗哭了。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+但是，也把我给洗出瘾来了：洗完出来一照镜子，嗯？这位中年男人原来松驰的肌肉和皮肤，怎么都变得紧致、紧绷了呢？难道是热胀冷缩的缘故？反正就感觉自己变年轻了，因为真得冻得像个孙子似的。从此一发不可收拾，几乎每天我都要洗一个冷水澡。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+接下来就跟大家分享一下我坚持了快半年的冷水澡体验。
+</p>
+<div class="outline-2" id="outline-container-org3241e80">
+<h2 id="org3241e80" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'><span class="section-number-2">1</span> 每天洗冷水澡是个好习惯</h2>
+<div class="outline-text-2" id="text-1">
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+研究表明，首先，每天洗澡就是一个非常好的习惯，对改善个人卫生，提升个人形象有着显著的效果。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+但是，该研究从另一个角度表明，如果不是因为每天洗冷水澡的话，某些人是做不到每天洗澡的。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+因为洗冷水澡非常「刺激」，而人的大脑会主动地寻找各种刺激和诱惑，所以很容易就可以养成每天洗冷水澡的「好习惯」。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+其次，好习惯和坏习惯的关系，就像朋友和敌人一样：一个好习惯可以抑制一个坏习惯，同时也能引发其他好习惯。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+比如，拖延症，可能就是一个可以通过洗冷水澡改善的不良习惯：因为我们洗的方法是先用热水、再用冷水，中间把水龙头从热水「咔」给调到冷水的那一下，我每天都非常抗拒、尽量拖延，但最后又每天都克服了。你说，经过长期这种训练，日常生活和工作中的拖延症，是不是也能得到一定程度的改善？
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+又比如，锻炼身体，可能是一个通过洗冷水澡、克服拖延症之后得到改善的好习惯：根据我个人研究发现，我很多次无法坚持健身，都跟拖延症有关，拖着拖着，拖到晚上 10 点钟，啊，医生说太晚锻炼有害健康，睡觉<img class="emoji" src="emojis/smiley_82.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>！然而，躺到床上之后，又因为自己今天没能坚持锻炼，心情比较沮丧，失眠了，第二天因为昨晚没有睡好，这种情况下锻炼有害健康，所以继续不用锻炼<img class="emoji" src="emojis/wx-Ye.PNG" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>。（你猜我第三天锻炼了么？为什么？）
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+拖延症得到改善之后，一般我都会早一点锻炼；如果偶尔有拖到比较晚的情况，因为经过长期洗冷水澡的心理建设，我已经自认为是一个「硬汉」，作为对自己拖延的报复和惩罚，我还是常常会强迫自己完成强度稍低一点的锻炼。即使真的没有完成，没关系，第二天又洗了个冷水澡，就不会怀疑自己已经不是硬汉了。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+关于太晚健身是否有害健康，我们可以参考一下成功人士的做法，有一条关于赵本山脑溢血被徒弟送去抢救的旧闻，当时晚上十一二点了，老赵在干嘛？开完会回到房间，开始做俯卧撑锻炼身体！当然，我的意思不是说我也要天天晚上十一二点锻炼，然后成为老赵那样的成功人士，那是不可能的。作为一个普通人，我应该学习的是这些成功人士的这种自虐一般的自律，然后争取把生活过得更好一点。（最关键的一点，是提醒自己，别太晚锻炼；偶尔为之，应该问题不大；因此放弃锻炼，可能因小失大）
+</p>
 </div>
 </div>
-</div>
-<div class="outline-2" id="outline-container-orge6ecfe7">
-<h2 id="orge6ecfe7" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'><span class="section-number-2">2</span> Further plan</h2>
+<div class="outline-2" id="outline-container-orgbfca8fe">
+<h2 id="orgbfca8fe" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'><span class="section-number-2">2</span> 每天洗冷水澡，每天喝鸡汤</h2>
 <div class="outline-text-2" id="text-2">
-<ol class="org-ol" style="margin: 1.2em 0; padding-left: 2em">
-<li style="margin: 0.5em 0">Clean up lsp-intellij and lsp-mode code changes, find a way that is standard with the lsp-mode people.</li>
-<li style="margin: 0.5em 0">Study whether I can add more lsp feature to lsp-intellij, such as managing imports, code refactory, minor fixes, and so on.</li>
-</ol>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+关于鸡汤我见过讲得最透彻的，是一位尊敬的网红老师，他写了一本书，叫「我的奋斗」，里面讲他如何从中关村图书城买了 100 斤成功学书籍回去，每本鸡汤看个几页，就会有一句「精神鸦片」像雷电一样击中他，比如李敖年轻时候讲过的一句话：「不怕苦，吃苦半辈子；怕吃苦，吃苦一辈子」，又比如「失败只有一种，那就是半途而废」，每句话第一次看到，都会让他满地打滚、嚎啕大哭、冲到卫生间洗个冷水澡（你看，冷水澡和鸡汤是有很强的关联的<img class="emoji" src="emojis/SMILING_FACE_WITH_OPEN_MOUTH_AND_TIGHTLY-CLOSED_EYES.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>）。但是，每句鸡汤只能支持他最多三天时间，时间一到，保证失效，必须去滚滚红尘中浪一圈，回去之后换一句新的，然后再痛哭、打滚、洗一个冷水澡，又坚持三天。
+</p>
+<div class="figure" style="padding: 0.5em">
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0; text-align: center"><a href="images/teacher-luo.jpg" style="color: #06C; text-decoration: underline"><img alt="teacher-luo.jpg" src="images/teacher-luo.jpg" style="max-width: 100%; border-width: 0"/></a>
+</p>
+</div>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+当年看到这段描写，作为一个鸡汤爱好者，爆笑之余，我觉得非常可惜，怎么没有早一点遇到这位老师，早一点掌握鸡汤的正确服用方法。而且，更可惜的是，我个人感觉，这种了不起的服用方法，一旦过了二三十岁那个年纪，一旦被人告知之后，就像被剧透了一样，效果会大打折扣。反正我看完之后，并没有一冲动也跑到图书城去买个几十斤鸡汤书籍回来，依样画葫芦地服用起来。怎么讲，可能喝鸡汤也是讲缘份的吧。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+不过，开始每天洗冷水澡之后，我忽然惊喜地发现，鸡汤又可以开始喝起来了！一开始是因为太冷了<img class="emoji" src="emojis/smiley_93.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>，不给自己「打针」，有点儿受不了，冷水龙头一开，啊~，嘶~，「天降大任于斯人也，必先苦其心志，冷其筋骨」，自然而然地就像和尚念经、丐帮弟子唱莲花落一样地念了起来。没办法，上学的时候都学过这个，年轻的时候还颇受过鼓舞。但是很快，我就发现这句鸡汤有点儿不太合适，首先，虽然我们差不多每个人都学过这句话，但是，天哪儿还有那么多大任要降给我们每一个人？再说了，降到我身上我也接不住啊。。。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+没办法，这句鸡汤的时效性已经到了，只好想办法换一句了。怎么换呢，也买个几十斤鸡汤文学么，no no no，只有年轻人才需要不停地换花样喝鸡尾汤，作为中年人，我们已经 settled down，只要有一碗合适的汤，就可以天天喝了。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+一开始换鸡汤的方法还是靠回忆，以前鼓舞过自己、感动过自己的名著啊、名言啊、名人啊、名场面啊什么的。比如前面说的那位老师，欠债三个亿，仍然在江湖中行走卖艺，他是怎么做到的？他以前曾经嘲笑过刘欢老师，给自己的女儿取名「一丝」，说是源自佛教用语「一丝不挂」，比喻人的心地纯洁，没有一丝牵挂。但是我在一丝不挂的冲冷水澡的时候，想到的是这位老师自己，他明明已经只剩一丝血了，但他就是不会挂！这才是真正的「一丝不挂」，就像他曾经引用过的一句鸡汤，「世界上只有一种真正的英雄主义，那就是在认识生活的真相后依然热爱生活」。生活的真相就是已经只剩一丝血了，但因为依然热爱生活，所以才不会轻易挂掉。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+比如在戏精上身中二起来的时候，我会幻想自己现在是哈利·波特里的邓布利多和哈利波特，没错一人分饰两角，一边是痛苦的邓布利多，「够了，哈利，不要了，我受不了了，太冷了」，然后伸手想把水龙头开到热水；另一边是强忍泪水的哈利波特，啪地拍掉邓布利多的手，「不行，邓布利多，对不起，还要再洗二十秒」。但这个属于喝起来比较累的鸡汤，所以后来也放弃了。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+后来终于碰到一句我认为可以长期喝的鸡汤，是村上春树说的，在回复一个失恋的年轻人来信的时候：『。。。落ち込んでないでがんばってね。僕がフルマラソンを走るときのマントラは「痛みは避けがたいが、苦しみはオプションだ」というものです。熟読玩味してください。苦しみに甘えないように』。翻译过来是『。。。现在心情低落要加油啊。我在跑马拉松的时候念的咒语是「痛虽然不可逃避，苦却是一种选择」。请你对这句话熟读玩味。在苦面前不要当甜心小宝宝，说什么宝宝心里苦之类的屁话』。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+所以，我现在洗冷水澡的时候，也会念一句咒语，「痛不痛？痛！苦不苦？不苦！」<img class="emoji" src="emojis/FLEXED_BICEPS.0.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+确实有奇效，推荐你也试一试<img class="emoji" src="emojis/SMILING_FACE_WITH_OPEN_MOUTH_AND_SMILING_EYES.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>。
+</p>
+<p style="margin-top: 10px; margin-bottom: 10px; margin: 0 0 1.2em 0">
+（注意：冲凉有风险，入浴须谨慎。前面提到的那个实验中，有一位参与对象在期间因急性肺栓塞去世了<img class="emoji" src="emojis/smiley_36.png" style="max-width: 100%; font-size: 1em; width: 1.3em; vertical-align: -0.35em;"/>）。
+</p>
 <nav>
 <ul id="prev_next_posts" style="margin: 1.2em 0; padding-left: 2em; list-style: none; padding: 0">
 <li class="prev_post" style="margin: 0.5em 0; float: left; width: 50%">
-<a href="blog/2020/03/21/lost-sleep.html" style="color: #06C; text-decoration: underline"> <!-- prev-url -->
+<a href="blog/2020/06/16/0-Android-App-development-under-FreeBSD.html" style="color: #06C; text-decoration: underline"> <!-- prev-url -->
 <i class="icon-chevron-left">《</i>
-        lost-sleep <!-- prev-title -->
+        Android App development under FreeBSD <!-- prev-title -->
 </a>
 </li>
 <li class="next_post" style="margin: 0.5em 0; float: right; width: 50%; text-align: right;">
@@ -327,12 +224,13 @@ Copy the project files with a hardlink:
 </div>
 </div>
 </div>
+cat: /home/bhj/src/github/baohaojun.github.com/meta/tags/emotion.desc: そのようなファイルやディレクトリはありません
 <!-- {%html-mode%} -->
 <div id="disqus_container">
 <script style="margin-top: 20px; margin-bottom: 20px" type="text/javascript">
     /* * * CONFIGURATION VARIABLES: THIS CODE IS ONLY AN EXAMPLE * * */
     var disqus_shortname = 'baohaojun'; // Required - Replace example with your forum shortname
-    var disqus_url = 'http://baohaojun.github.io/blog/2020/06/16/0-Android-App-development-under-FreeBSD.html';
+    var disqus_url = 'http://baohaojun.github.io/blog/2020/07/14/cold-bath.html';
 
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
@@ -369,10 +267,11 @@ Copy the project files with a hardlink:
 </dl>
 <h2 style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Tags</h2>
 <ul style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
-<li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="meta/tags/android.html" style="color: #06C; text-decoration: underline" title="Android development">android</a></li>
+<li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="../../../../meta/tags/emotion.html" style="color: #06C; text-decoration: underline" title="">emotion</a></li>
 </ul>
 <h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Previous Posts</h2>
 <ul id="recently" style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
+<li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2020/06/16/0-Android-App-development-under-FreeBSD.html" style="color: #06C; text-decoration: underline"> Android App development under FreeBSD </a></li>
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2020/03/21/lost-sleep.html" style="color: #06C; text-decoration: underline"> lost-sleep </a></li>
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2020/03/02/0-Using-Emacs-as-the-Clipboard-Manager.html" style="color: #06C; text-decoration: underline"> Using Emacs as the Clipboard Manager </a></li>
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2020/01/02/2019.html" style="color: #06C; text-decoration: underline"> 2019 年个人总结 </a></li>
@@ -382,7 +281,6 @@ Copy the project files with a hardlink:
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2019/08/04/0-traps-of-binding-desktop-keys.html" style="color: #06C; text-decoration: underline"> 修改桌面键绑定的那些坑 </a></li>
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2019/06/16/0-7-habits-1.html" style="color: #06C; text-decoration: underline"> 参加「高效能人士的七个习惯」培训感悟（第一个习惯） </a></li>
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2019/05/28/0-about-bugs-priority-severity.html" style="color: #06C; text-decoration: underline"> 关于 Bug 的优先级、严重性 </a></li>
-<li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="blog/2019/04/17/0-After-Reading-OKR.html" style="color: #06C; text-decoration: underline"> OKR 减肥记 </a></li>
 </ul>
 <h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Archive</h2>
 <ul id="archives" style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
