@@ -91,6 +91,10 @@ for the JavaScript code in this tag.
 <body style='line-height: 1.6em; font-family: "Arial", Arial, Helvetica, sans-serif; margin: 0; padding: 40px 20px; font: x-small Georgia, Serif; text-align: center; font-size: small; color: #2E3436; background-color: #EDEDED'><style>@media all { #header { width: 660px; margin: 0 auto 10px; border: 1px solid #ccc } #bhj_article { width: 920px; margin: 0 auto; padding: 0; text-align: left } #bhj_leftpane, #content { width: 640px; float: left } #sidebar { width: 240px; float: right } img.emoji { width: 1.3em; vertical-align: -0.35em } }
 @media only screen and (-webkit-min-device-pixel-ratio: 2) /* Webkit-based browsers */, only screen and (min--moz-device-pixel-ratio: 2) /* Older Firefox browsers (prior to Firefox 16) */, only screen and (min-resolution: 2dppx) /* The standard way */, only screen and (min-resolution: 192dpi) { /* dppx fallback */ #header { width: 85%; margin: 0 auto 5px; border: 1px solid #ccc } #bhj_article { width: 90% } #bhj_leftpane, #content { width: 100%; float: none } #sidebar { width: 100%; float: none; display: none } #description { font: 60%/1.2em "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; text-transform: uppercase } }
 @media all { .date-header { margin: 1.5em 0 0.5em } .post { margin: 0.5em 0 1.5em; border-bottom: 1px dotted #ccc; padding-bottom: 1.5em } }
+@media handheld { .date-header { padding: 0 1.5em 0 1.5em } .post { padding: 0 1.5em 0 1.5em } }
+@media all { #header { width: 660px; margin: 0 auto 10px; border: 1px solid #ccc } #bhj_article { width: 920px; margin: 0 auto; padding: 0; text-align: left } #bhj_leftpane, #content { width: 640px; float: left } #sidebar { width: 240px; float: right } img.emoji { width: 1.3em; vertical-align: -0.35em } }
+@media only screen and (-webkit-min-device-pixel-ratio: 2) /* Webkit-based browsers */, only screen and (min--moz-device-pixel-ratio: 2) /* Older Firefox browsers (prior to Firefox 16) */, only screen and (min-resolution: 2dppx) /* The standard way */, only screen and (min-resolution: 192dpi) { /* dppx fallback */ #header { width: 85%; margin: 0 auto 5px; border: 1px solid #ccc } #bhj_article { width: 90% } #bhj_leftpane, #content { width: 100%; float: none } #sidebar { width: 100%; float: none; display: none } #description { font: 60%/1.2em "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; text-transform: uppercase } }
+@media all { .date-header { margin: 1.5em 0 0.5em } .post { margin: 0.5em 0 1.5em; border-bottom: 1px dotted #ccc; padding-bottom: 1.5em } }
 @media handheld { .date-header { padding: 0 1.5em 0 1.5em } .post { padding: 0 1.5em 0 1.5em } }</style>
 <div class="status" id="preamble">
 <div id="header">
@@ -1227,19 +1231,19 @@ for the JavaScript code in this tag.
 </div> <!-- bhj_leftpane -->
 <div id="sidebar"><div id="sidebar2">
 <!-- Begin #profile-container -->
-<div id="profile-container" style="margin: 0 0 1.5em; border-bottom: 1px dotted #ccc; padding-bottom: 1.5em"><h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>About Me</h2>
-<dl class="profile-datablock" style="padding: 0; margin: 0.5em 0 0.5em"><dt class="profile-img" style="font-size: 1em; font-weight: bold; font-style: italic; display: inline"><a "="" href="/images/bhj.png" style="color: #06C; text-decoration: underline"><img alt="My Photo" height="58" src="/images/bhj-thumb.png" style="max-width: 100%; border-width: 0; float: left; padding: 4px; border: 1px solid #ddd; margin: 0 8px 3px 0" width="80"/></a></dt>
+<div id="profile-container" style="margin: 0 0 1.5em; border-bottom: 1px dotted #ccc; padding-bottom: 1.5em"><h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>About Me</h2>
+<dl class="profile-datablock" style="padding: 0; margin: 0.5em 0 0.5em"><dt class="profile-img" style="font-size: 1em; font-weight: bold; font-style: italic; display: inline"><a "="" href="/images/bhj.png" style="color: #06C; text-decoration: underline"><img alt="My Photo" height="58" src="/images/bhj-thumb.png" style="max-width: 60%; max-height: 600px; border-width: 0; float: left; padding: 4px; border: 1px solid #ddd; margin: 0 8px 3px 0" width="80"/></a></dt>
 <dd class="profile-data" style='padding: 0 1em; margin: 0; font: bold 78%/1.6em "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; text-transform: uppercase; letter-spacing: 0.1em'><strong style="display: none">Name:</strong> <a href="https://www.github.com/baohaojun" rel="author" style="color: #06C; text-decoration: underline"> Bao Haojun </a></dd>
 <dd class="profile-data" style='padding: 0 1em; margin: 0; font: bold 78%/1.6em "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; text-transform: uppercase; letter-spacing: 0.1em'><strong style="display: none">Location:</strong>  Beijing, China </dd></dl>
 <p class="profile-link" style='margin-top: 10px; margin-bottom: 10px; margin: 0; font: 78%/1.4em "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.5em'><a href="/blog/2011/12/23/index.html" rel="author" style="color: #06C; text-decoration: underline">View my complete profile</a></p></div>
-<h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Like my blog?</h2>
-<a href="https://pledgie.com/campaigns/33066" style="color: #06C; text-decoration: underline"><img alt="Click here to lend your support to: Well done, Mr. Bao Haojun. and make a donation at pledgie.com !" border="0" src="https://pledgie.com/campaigns/33066.png?skin_name=chrome" style="max-width: 100%; border-width: 0"/></a>
+<h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Like my blog?</h2>
+<a href="https://pledgie.com/campaigns/33066" style="color: #06C; text-decoration: underline"><img alt="Click here to lend your support to: Well done, Mr. Bao Haojun. and make a donation at pledgie.com !" border="0" src="https://pledgie.com/campaigns/33066.png?skin_name=chrome" style="max-width: 60%; max-height: 600px; border-width: 0"/></a>
 <!-- End #profile -->
-<h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Feeds</h2>
+<h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Feeds</h2>
 <ul style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="/atom.xml" style="color: #06C; text-decoration: underline">Atom</a></li>
 </ul>
-<h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Projects</h2>
+<h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Projects</h2>
 <dl style="margin: 1.2em 0; padding: 0">
 <dt style="font-size: 1em; font-weight: bold; font-style: italic"><a href="/blog/2011/12/23/beagrep.html" style="color: #06C; text-decoration: underline"> Beagrep </a></dt>
 <dd style="margin: 0 0 1em; padding: 0 1em"> Grep 2G source code in 0.23 second </dd>
@@ -1248,13 +1252,13 @@ for the JavaScript code in this tag.
 <dt style="font-size: 1em; font-weight: bold; font-style: italic"><a href="/blog/2011/12/28/org-jira.html" style="color: #06C; text-decoration: underline"> Org-jira.el </a></dt>
 <dd style="margin: 0 0 1em; padding: 0 1em"> Use JIRA with org-mode </dd>
 </dl>
-<h2 style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Tags</h2>
+<h2 style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Tags</h2>
 <ul style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
 </ul>
-<h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Previous Posts</h2>
+<h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Previous Posts</h2>
 <ul id="recently" style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
 </ul>
-<h2 class="sidebar-title" style='font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; margin: 1.3em 0 1em; padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; color: #00578E; font-weight: bold'>Archive</h2>
+<h2 class="sidebar-title" style='padding: 0; font-size: 1.4em; border-bottom: 1px solid #eee; margin: 1.5em 0 0.75em; font-family: "Trebuchet MS", Trebuchet, Arial, Verdana, Sans-serif; letter-spacing: 0.2em; color: #00578E; font-weight: bold'>Archive</h2>
 <ul id="archives" style="padding-left: 2em; margin: 0 0 1.5em; padding: 0 0 1.5em; border-bottom: 1px dotted #ccc; list-style: none">
 <li style="margin: 0; padding: 0 0 0.25em 15px; text-indent: -15px; line-height: 1.5em"><a href="/meta/Archive.html" style="color: #06C; text-decoration: underline"> The complete archive </a></li>
 </ul>
